@@ -761,37 +761,29 @@ pragma solidity ^0.5.0;
 contract MominCoinICO is Crowdsale, AllowanceCrowdsale {
     using SafeMath for uint256;
     
-    // uint256 private minPurchase;
-    // uint256 private _rate;
-    // uint256 private decimals;
+    uint256 private minPurchase;
 
     constructor(
         uint256 rate, // 10 if token decimals are nine
         address payable wallet,
         IERC20 token,
         address tokenWallet, 
-        // uint256 _minPurchase, 
-        // uint256 _decimals, 
+        uint256 _minPurchase, 
         IERC20 _USDT
     )
         AllowanceCrowdsale(tokenWallet)  
         Crowdsale(rate, wallet, token, _USDT)
         public
     {
-        // minPurchase = _minPurchase;
-        // _rate = rate;
-        // decimals = _decimals;
+        minPurchase = _minPurchase;
     }
 
-    // function _getTokenAmount(uint256 weiAmount) internal view returns (uint256) {
-    //     return (weiAmount.mul(_rate).div(10 ** decimals));
-    // }
 
-    // function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal view {
-    //     require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
-    //     require(weiAmount != 0, "Crowdsale: weiAmount is 0");
-    //     //require(weiAmount % minPurchase == 0, "Invalid Amount");
-    //     this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
-    // }
+    function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal view {
+        require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
+        require(weiAmount != 0, "Crowdsale: weiAmount is 0");
+        require(weiAmount >= minPurchase, "Invalid Amount");
+        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+    }
 
 }
